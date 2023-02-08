@@ -8,36 +8,78 @@
 </head>
 
 <body>
-    <div class="card text-center mt-5 shadow-lg p-3 bg-white rounded" style="width: 36rem;margin: auto;text-transform: uppercase;">
-        <h4 class="card-title mb-0">Detecting Blurred Photo</h4>
-        <div class="card-body">
-            <div>
-                {% if images %}
-                {% for image in images %}
-                <div class="alert alert-dark mb-0 mt-4">
+
+
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="card text-center mt-5 shadow-lg p-3 bg-white rounded" style="width: 20rem;margin: auto;text-transform: uppercase;">
+              <h4 class="card-title mb-0">Select Photo</h4>
+              <div class="card-body">
+                <div>
+                  <img src="" id="selectedImage" style="width: 100%; height: 250px; object-fit: cover;" class="mt-0">
+                </div>
+              </div>
+              <form class="validated" method="post" action="/" enctype="multipart/form-data">
+                <div class="custom-file mb-3">
+                  <input type="file" name="file[]" class="custom-file-input" id="document" multiple required>
+                  <label class="custom-file-label" for="document">Choose Photo...</label>
+                  <div class="invalid-feedback">Example invalid custom file feedback</div>
+                </div>
+                <button type="submit" class="btn btn-block btn-danger">
+                  EXTRACT
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="card text-center mt-5 shadow-lg p-3 bg-white rounded" style="width: 20rem;margin: auto;text-transform: uppercase;">
+              <h4 class="card-title mb-0">Detecting Blurred Photo</h4>
+              <div class="card-body">
+                <div>
+                  {% if images %}
+                  {% for image in images %}
+                  <div class="alert alert-dark mb-0 mt-4">
                     {{ image[0][0] }}
                     <br>
                     Sharpness Value: {{ image[0][1] }}
+                  </div>
+                  <img src="{{image[1]}}" id="selectedImage" style="width: 100%; height: 250px; object-fit: cover;" class="mt-0">
+                  {% endfor %}
+                  {% endif %}
                 </div>
-                <img src="{{image[1]}}" class="mt-0">
-                {% endfor %}
-                {% endif %}
+              </div>
             </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="card text-center mt-5 shadow-lg p-3 bg-white rounded" style="width: 20rem;margin: auto;text-transform: uppercase;">
+              <h4 class="card-title mb-0">Enhaned Photo</h4>
+              <div class="card-body">
+                <div>
+                  {% if images %}
+                  {% for image in images %}
+                  <img src="{{image[1]}}" id="selectedImage" style="width: 100%; height: 250px; object-fit: cover;" class="mt-0">
+                  {% endfor %}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <form class="validated" method="post" action="/" enctype="multipart/form-data">
-            <div class="custom-file mb-3">
-                <input type="file" name="file[]" class="custom-file-input" id="document" multiple required>
-                <label class="custom-file-label" for="document">Choose Photo...</label>
-                <div class="invalid-feedback">Example invalid custom file feedback</div>
-            </div>
-            <button type="submit" class="btn btn-block btn-danger">
-                EXTRACT
-            </button>
-        </form>
-    </div>
+      
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById("document").addEventListener("change", function () {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            document.getElementById("selectedImage").src = e.target.result;
+          };
+          reader.readAsDataURL(this.files[0]);
+        });
+      </script>
 </body>
 
 </html>
