@@ -7,6 +7,7 @@ import io
 from PIL import Image
 import base64
 from Helpers import *
+from enhancement import *
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
@@ -44,16 +45,33 @@ def upload_image():
 				result = "Blurry"
 
 			sharpness_value = "{:.0f}".format(fm)
-			message = [result,sharpness_value]
 
+			recoveredImage = enhancement.recoverImage(image)
+			cv2.imwrite("processed_image.png",recoveredImage)
+
+			message = [result,sharpness_value,recoveredImage]
+			# print(recoveredImage)
 			img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+			# print(image)
 			file_object = io.BytesIO()
 			img= Image.fromarray(Helpers.resize(img,width=500))
 			img.save(file_object, 'PNG')
 			base64img = "data:image/png;base64,"+base64.b64encode(file_object.getvalue()).decode('ascii')
-			images.append([message,base64img])
-
+   			
+			file_object2 = io.BytesIO()
+			img2= Image.fromarray(recoveredImage)
+			img2.save(file_object2, 'PNG')
+			base64img2 = "data:image/png;base64,"+base64.b64encode(file_object2.getvalue()).decode('ascii')
+   			
+      
+			images.append([message,base64img,base64img2])
+			
+			
 	print("images:", len(images))
+	print(images[0][0][1])
+	print(images[0][0][2])
+	# print(images[0][1])
+ 
 	return render_template('upload.html', images=images )
 	
 
